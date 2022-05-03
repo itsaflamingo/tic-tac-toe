@@ -1,0 +1,187 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;400&display=swap');
+* {
+    font-family: 'Roboto', sans-serif;
+    --background-color: rgba(130, 246, 238, 0.258);
+    --text-color: rgba(255, 255, 255, 0.6);
+    --border-radius: 20px;
+    --margin: 15px;
+    --box-shadow-hover: 1px 1px 10px 1px #93b8ccf0, 
+    inset 0 0 1px 3px rgba(253, 243, 243, 0.366), 
+    inset 0px 0px 30px 1px rgba(206, 205, 205, 0.836);
+    --box-shadow: 1px 1px 10px 1px #93b8cc62, 
+    inset 0 0 1px 3px rgba(253, 243, 243, 0.207), 
+    inset 0px 0px 30px 1px rgba(206, 205, 205, 0.518);
+}
+:root {
+    font-size: calc(0.7rem + 0.4vw);
+    color: var(--text-color);
+}
+body {
+    background-image: linear-gradient(90deg, #43cea2 ,#185a9d);
+    height: 90vh;
+    width: 95vw;
+}
+.container {
+    border-radius: 50px;
+    box-shadow: var(--box-shadow);
+    background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.277), #40cae962);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 90vh;
+    width: 95vw;
+    z-index: 0;
+}
+/* player score div */
+.player-score {
+    display: flex;
+    justify-content: space-between;
+    width: 50%;
+    font-size: 1.3rem;
+}
+/* game board section */
+.main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 77vh;
+    width: 80vw;
+}
+/* Game board */
+.gameBoard {
+    height: 45vh;
+    width: 25vw;
+    margin-top: 12vh;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: var(--margin);
+}
+.gameDiv {
+    background-color: var(--background-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 4rem;
+    font-weight: 900;
+}
+.gameDiv > p {
+    margin: 0;
+}
+.gameDiv:hover {
+    box-shadow: var(--box-shadow-hover);
+}
+/* MODAL */
+.modal {
+    background-image: linear-gradient(90deg, #43cea2 ,#185a9d);
+    border-radius: var(--border-radius);
+
+    width: 45%;
+    height: 70%;
+
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: 200ms ease-in-out;
+    z-index: 10;
+}
+.modal-background {
+    background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.185), #40cae941);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    height: 90%;
+    z-index: 10;
+  
+    border-radius: var(--border-radius);
+}
+form{
+    display: flex;
+    flex-direction: column;
+}
+button {
+    width: 7vw;
+    height: 5.5vh;
+    border-radius: var(--border-radius);
+    background-color: var(--background-color);
+    border: none;
+    color: var(--text-color);
+    font-weight: 900;
+}
+.diffButtons {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
+/* if player selects to play vs computer */
+.active {
+    box-shadow: var(--box-shadow-hover);
+}
+.submit {
+    margin: 25px 0px;
+    background-image: linear-gradient(90deg, rgba(177, 241, 206, 0.6), #10bfe7a7);;
+    font-size: 0.9rem;
+    width: 8vw;
+    height: 5.8vh;
+}
+input {
+    padding: 0;
+    margin: 15px;
+    box-sizing: border-box;
+    color: var(--text-color);
+    border: none;
+    background-color: var(--background-color);
+    border-radius: var(--border-radius);
+    height: 5vh;
+    width: 20vw;
+    box-shadow: 4px 3px 0px 0px rgb(64, 144, 156);;
+    font-size: 20px;
+    font-weight: 900;
+    padding-left: 0.5rem;
+}
+input:focus {
+    outline: none;
+    border: 0px;
+    box-shadow: var(--box-shadow);
+}
+::placeholder {
+    color: var(--text-color);
+    font-size: 0.8rem;
+    padding-left: 0.5rem;
+    font-weight: 900;
+}
+.invis {
+    transform: scale(0);
+}
+.display-name {
+    font-size: 1.5rem;
+    font-weight: 900;
+}
+footer {
+    position: fixed;
+    bottom: 0px;
+    left: 46%;
+    font-size: 0.7rem;
+}
+.compOption:hover, .compOption:focus {
+    box-shadow: var(--box-shadow-hover);
+}
+.levels:hover, .levels:focus {
+    box-shadow: var(--box-shadow-hover);
+}
+
