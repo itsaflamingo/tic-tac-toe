@@ -53,8 +53,6 @@ toggle = (e) => {
 })
 
 const playerFactory = (obj) => {
-    this.sayHello = () => `Hi, ${obj}!`;
-
     
     function score () {
             //possible win combinations
@@ -95,15 +93,21 @@ const playerFactory = (obj) => {
     
     function easy () {
         //select random number from 0-8, round to nearest int
-        let num = Math.floor((Math.random() * 9) + 1);
-
+        console.log(obj);
+        if(obj.freeDivs === undefined) {
+            return;
+        }
+        let freeDivs = obj.freeDivs;
+        let index = Math.floor(Math.random() * freeDivs.length);
+        let num = freeDivs[index];
         //send to gameController, then displayController as a selection for p2
+        console.log(num);
         let easyNum = gameController(num);
         easyNum.sendNumToP2();
     }
 
     function med () {
-
+        let num = Math.floor((Math.random() * 9) + 1);
     }
     
     function imp () {
@@ -111,7 +115,6 @@ const playerFactory = (obj) => {
     }
 
     return {
-        sayHello, 
         score,
         easy,
         med,
@@ -122,12 +125,19 @@ const playerFactory = (obj) => {
 const gameController = ((obj) => {
 
     let scoreDisplayToInfo = () => {
+
         let idRemover = playerFactory(obj);
         idRemover.score();
+
+        if(compOption.classList.contains('active') && obj.toggle === true) {
+                let diffi = playerFactory(obj);
+                diffi.easy();
+        }
     }
 
     let sendNumToP2 = () => {
         //add random num generated to player choice by triggering click event
+        console.log(obj);
         document.getElementById(`${obj}`).click();
     }
 
@@ -145,39 +155,45 @@ let displayController = (function() {
 
     gameDiv.forEach((div) => div.addEventListener('click', (e) => playerChoice(e, div)));
 
+    let freeDivs = gameBoard.divArray; //available selection of divs
     let id;
-    let divArray = gameBoard.divArray;
+
+    //bool: if false, select playerOne(); if true, select playerTwo()
     let toggle;
-    let playerOnePattern = [];
+
+    //selected divs
+    let playerOnePattern = []; 
     let playerTwoPattern = [];
 
     let playerChoice = (e, div) => {
 
     //get e.target.id, and remove from array to prevent div from further usage.
         id = parseInt(e.target.id);
-        indexId = divArray.indexOf(id);
+        indexId = freeDivs.indexOf(id);
 
         let playerOne = () => {
         //If div has bot previously been clicked
-            if(divArray.includes(id)) {
+            if(freeDivs.includes(id)) {
                 //id of each div clicked is removed and placed into array. 
-                playerOnePattern += divArray.splice(indexId, 1);
+                playerOnePattern += freeDivs.splice(indexId, 1);
                 
+                //display x in div
                 const p = document.createElement('p');
                 playerOne = document.createTextNode('X');
 
                 div.appendChild(p);
                 p.appendChild(playerOne);
 
+                //next selection will trigger playerTwoComp
                 toggle = true;
             }
         }
 
         let playerTwoComp = () => {
 
-            if(divArray.includes(id)) {
+            if(freeDivs.includes(id)) {
 
-                playerTwoPattern += divArray.splice(indexId, 1);
+                playerTwoPattern += freeDivs.splice(indexId, 1);
 
                 const p = document.createElement('p');
                 playerTwo = document.createTextNode('O');
@@ -189,7 +205,7 @@ let displayController = (function() {
             }
 
         }
-        //toggles X and O 
+        //toggles playerOne and playerTwo 
         (function togglePlayers () {
             toggle ? playerTwoComp() : playerOne();
         })();
@@ -197,10 +213,12 @@ let displayController = (function() {
         let objControl = {
             playerOnePattern,
             playerTwoPattern,
-            toggle
+            toggle,
+            freeDivs
         }
 
-        let scoreDisplayControl = gameController(objControl); //is this just for factory functions?
+        //send objControl to gameController, which sends to playerFactory.score
+        let scoreDisplayControl = gameController(objControl); 
         scoreDisplayControl.scoreDisplayToInfo();
 
     }
