@@ -1,10 +1,11 @@
 const submit = document.querySelector('.submit');
 const modal = document.querySelector('.modal');
-const playerOneInput = document.querySelector('#playerOneInput');
-const playerTwoInput = document.querySelector('#playerTwoInput');
 const compOption = document.querySelector('.compOption');
 const gameLevels = document.querySelector('.levels');
 const gameboard = document.querySelector('.gameBoard');
+const playerOneScoreDisplay = document.querySelector('.playerOneScore');
+const playerTwoScoreDisplay = document.querySelector('.playerTwoScore');
+
 
 submit.addEventListener('click', () => formRetrieve());
 compOption.addEventListener('click', (e) => toggle(e));
@@ -16,7 +17,7 @@ toggle = (e) => {
 
     if(e.target.classList.contains('compOption')) {
         compOption.classList.toggle('active');
-        console.log('comp!');
+        ('comp!');
     }
     if(e.target.classList.contains('levels')) {
         if(e.target.innerHTML === 'Easy') {
@@ -44,15 +45,28 @@ toggle = (e) => {
 }
 
 (formRetrieve = () => {
+    const playerOneInput = document.querySelector('#playerOneInput').value;
+    const playerTwoInput = document.querySelector('#playerTwoInput').value;
 
     modal.classList.add('invis');
 
-    displayController();
-    playerFactory();
+    let obj = {
+        playerOneInput,
+        playerTwoInput
+    }
+
+    let sendNames = playerFactory(obj);
+    sendNames.storeNames();
+    
 
 })
 
 const playerFactory = (obj) => {
+
+    const storeNames = () => {
+        const sendNames = gameController(obj);
+        sendNames.displayName();
+    }
     
     function score () {
             //possible win combinations
@@ -84,7 +98,11 @@ const playerFactory = (obj) => {
                 });
 
                 if(match.length === 3) {
-                    console.log("Win!");
+                    let displayWin;
+                    if(obj.toggle === true) {
+                        
+                    }
+                    let display = gameController();
                 }
 
             }
@@ -93,7 +111,6 @@ const playerFactory = (obj) => {
     
     function easy () {
         //select random number from 0-8, round to nearest int
-        console.log(obj);
         if(obj.freeDivs === undefined) {
             return;
         }
@@ -101,7 +118,6 @@ const playerFactory = (obj) => {
         let index = Math.floor(Math.random() * freeDivs.length);
         let num = freeDivs[index];
         //send to gameController, then displayController as a selection for p2
-        console.log(num);
         let easyNum = gameController(num);
         easyNum.sendNumToP2();
     }
@@ -115,6 +131,7 @@ const playerFactory = (obj) => {
     }
 
     return {
+        storeNames,
         score,
         easy,
         med,
@@ -137,11 +154,22 @@ const gameController = ((obj) => {
 
     let sendNumToP2 = () => {
         //add random num generated to player choice by triggering click event
-        console.log(obj);
         document.getElementById(`${obj}`).click();
     }
 
+    const displayName = () => {
+        const displayn = displayController(obj);
+        displayn.displayName();
+    }
+
+    const displayWin = () => {
+        const displayw = displayController();
+        displayw.displayWinner();
+    }
+
     return {
+        displayName,
+        displayWin,
         scoreDisplayToInfo,
         obj,
         sendNumToP2
@@ -150,7 +178,9 @@ const gameController = ((obj) => {
 
 });
 
-let displayController = (function() {
+let displayController = (function(obj) {
+    const winDisplay = document.querySelector('.win-display');
+    const nameDisplay = document.querySelector('.display-name');
     const gameDiv = document.querySelectorAll('.gameDiv');
 
     gameDiv.forEach((div) => div.addEventListener('click', (e) => playerChoice(e, div)));
@@ -221,6 +251,46 @@ let displayController = (function() {
         let scoreDisplayControl = gameController(objControl); 
         scoreDisplayControl.scoreDisplayToInfo();
 
+    }
+
+    const displayName = () => {
+        const playerOneName = obj.playerOneInput;
+        const playerTwoName = obj.playerTwoInput;
+        let namesDisplay; 
+
+        const p = document.createElement('p');
+
+        if(compOption.classList.contains('active')) {
+            namesDisplay = document.createTextNode(`Hi, ${playerOneName}!`);
+        }
+        else {
+            namesDisplay = document.createTextNode(`Hi, ${playerOneName} & ${playerTwoName}!`);
+        }
+
+        nameDisplay.appendChild(p);
+        p.appendChild(namesDisplay);
+    }
+
+    const displayWinner = () => {
+        let winner;
+        
+        if(toggle === true) {
+            winner = obj.playerOneInput;
+        }
+        else if (toggle === false) {
+            winner = obj.playerTwoInput;
+        }
+
+        const p = document.createElement('p');
+        const winnerDisplay = document.createTextNode(`${winner} wins!`);
+
+        winDisplay.appendChild(p);
+        p.appendChild(winnerDisplay);
+    }
+
+    return {
+        displayName,
+        displayWinner
     }
 
 });
