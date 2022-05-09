@@ -1,54 +1,52 @@
 const submit = document.querySelector('.submit');
 const modal = document.querySelector('.modal');
 const compOption = document.querySelector('.compOption');
-const gameLevels = document.querySelector('.levels');
+const gameLevels = document.querySelectorAll('.levels');
 const gameboard = document.querySelector('.gameBoard');
-const playerOneScoreDisplay = document.querySelector('.playerOneScore');
-const playerTwoScoreDisplay = document.querySelector('.playerTwoScore');
+const restart = document.querySelector('.restart');
+
+let easy = document.querySelector('#easy');
+let med = document.querySelector('#med');
+let impossible = document.querySelector('#imp');
 
 
 submit.addEventListener('click', () => formRetrieve());
-compOption.addEventListener('click', (e) => toggle(e));
-// gameLevels.forEach(level => addEventListener('click', (e) => toggle(e)));
-gameLevels.addEventListener('click', (e) => toggle(e));
+compOption.addEventListener('click', () => toggleComp());
+restart.addEventListener('click', () => gameController().sendRestart());
 
+easy.addEventListener('click', (e) => difficulty(e));
+med = addEventListener('click', (e) => difficulty(e));
+impossible.addEventListener('click', (e) => difficulty(e));
 
-toggle = (e) => {    
-
-    if(e.target.classList.contains('compOption')) {
-        compOption.classList.toggle('active');
-        ('comp!');
-    }
-    if(e.target.classList.contains('levels')) {
-        if(e.target.innerHTML === 'Easy') {
-            let diff = {
-                difficulty: 'easy'
-            }
-            let easy = playerFactory(diff);
+let difficulty = (e) => {
+        if(e.target.id === 'easy') {
+            let easy = playerFactory();
             easy.easy();
         }
-        else if(e.target.innerHTML === 'Medium') {
-            let diff = {
-                difficulty: 'medium'
-            }
-            let medium = playerFactory(diff);
+        else if(e.target.id === 'medium') {
+            let medium = playerFactory();
             medium.med();
         }
-        else if(e.target.innerHTML === 'Impossible') {
-            let diff = {
-                difficulty: 'impossible'
-            }
-            let imp = playerFactory(diff);
+        else if(e.target.id === 'imp') {
+            console.log('imp');
+            let imp = playerFactory();
             imp.imp()
         }
-    }
+}
+
+toggleComp = () => {
+        compOption.classList.toggle('active');
 }
 
 (formRetrieve = () => {
     const playerOneInput = document.querySelector('#playerOneInput').value;
-    const playerTwoInput = document.querySelector('#playerTwoInput').value;
+    let playerTwoInput = document.querySelector('#playerTwoInput').value;
 
     modal.classList.add('invis');
+
+    if(compOption.classList.contains('active')) {
+        playerTwoInput = 'Computer';
+    }
 
     let obj = {
         playerOneInput,
@@ -57,8 +55,6 @@ toggle = (e) => {
 
     let sendNames = playerFactory(obj);
     sendNames.storeNames();
-    
-
 })
 
 const playerFactory = (obj) => {
@@ -78,7 +74,7 @@ const playerFactory = (obj) => {
             //if x's turn (true)
             if(obj.toggle === true) {
                 match = obj.playerOnePattern;
-                para = obj.playerOnePattern
+                para = obj.playerOnePattern;
                 arr = Array.from(String(obj.playerOnePattern), Number);
             }
             //if o's turn (false)
@@ -98,11 +94,8 @@ const playerFactory = (obj) => {
                 });
 
                 if(match.length === 3) {
-                    let displayWin;
-                    if(obj.toggle === true) {
-                        
-                    }
-                    let display = gameController();
+                    let display = gameController(obj);
+                    display.displayWin();
                 }
 
             }
@@ -111,6 +104,7 @@ const playerFactory = (obj) => {
     
     function easy () {
         //select random number from 0-8, round to nearest int
+        console.log(obj);
         if(obj.freeDivs === undefined) {
             return;
         }
@@ -123,20 +117,86 @@ const playerFactory = (obj) => {
     }
 
     function med () {
-        let num = Math.floor((Math.random() * 9) + 1);
+        if(obj.freeDivs === undefined) {
+            return;
+        }
+        let freeDivs = obj.freeDivs;
+        let index = Math.floor(Math.random() * freeDivs.length);
+        let num = freeDivs[index];
+        //send to gameController, then displayController as a selection for p2
+        let easyNum = gameController(num);
+        easyNum.sendNumToP2();
     }
     
     function imp () {
 
-    }
+        let freeDivs = obj.freeDivs;
 
-    return {
-        storeNames,
-        score,
-        easy,
-        med,
-        imp
+        if(freeDivs === undefined) {
+            return;
+        }
+
+        //miniMax will return bestNum. send to gameController, then displayController as a selection for p2
+        function bestMove() {
+            let bestScore = -Infinity;
+            let bestMove;
+
+            for(let i = 0; i<freeDivs.length; i++) {
+                //iterate over available divs
+                let score = minimax(freeDivs, 0, true);
+                console.log(score);
+
+                //choose div based on best score.
+                if(score > bestScore) {
+                    bestScore = score;
+                    bestMove = freeDivs[i];
+                }
+            }
+
+            let bestNum = gameController(bestMove);
+            bestNum.sendNumToP2();
+        }
+
+        function  minimax(board, depth, maximizingPlayer) {
+            // if depth = 0 or node is a terminal node then
+            if(board == null) {
+                console.log(bestScore);
+            }
+            if (maximizingPlayer) {
+                let bestScore = -Infinity;
+           
+                for(let i = 0; i<board.length; i++) {
+                    let score = minimax(board, depth+1, false)
+
+                    bestScore = max(score, bestScore);
+                }
+                return bestScore;
+            }
+            else {
+                let bestScore = Infinity;
+                for(let i = 0; i<board.length; i++) {
+
+                    let score = minimax(board, depth+1, true)
+
+                    bestScore = min(score, bestScore);
+                }
+                return bestScore;
+            }
+            
+        }
+
+        return {
+            bestMove
+        }
+  
     }
+return {
+    storeNames,
+    score,
+    easy,
+    med,
+    imp
+}
 }
 
 const gameController = ((obj) => {
@@ -147,8 +207,8 @@ const gameController = ((obj) => {
         idRemover.score();
 
         if(compOption.classList.contains('active') && obj.toggle === true) {
-                let diffi = playerFactory(obj);
-                diffi.easy();
+                let diff = playerFactory(obj);
+                diff.easy();
         }
     }
 
@@ -158,13 +218,19 @@ const gameController = ((obj) => {
     }
 
     const displayName = () => {
-        const displayn = displayController(obj);
-        displayn.displayName();
+        const dispName = displayController(obj);
+        dispName.displayName();
     }
 
     const displayWin = () => {
-        const displayw = displayController();
-        displayw.displayWinner();
+        const displaywinner = displayController(obj);
+        displaywinner.displayWinner();
+    }
+
+    const sendRestart = () => {
+        console.log("I work!");
+        let reset = displayController();
+        console.log(typeof displayController().restart()); //Says restart() is not a function.
     }
 
     return {
@@ -172,7 +238,8 @@ const gameController = ((obj) => {
         displayWin,
         scoreDisplayToInfo,
         obj,
-        sendNumToP2
+        sendNumToP2,
+        sendRestart
     }
     
 
@@ -182,6 +249,17 @@ let displayController = (function(obj) {
     const winDisplay = document.querySelector('.win-display');
     const nameDisplay = document.querySelector('.display-name');
     const gameDiv = document.querySelectorAll('.gameDiv');
+
+    if(obj === undefined) {
+        let obj = {
+            playerOneInput: '',
+            playerTwoInput: ''
+        }
+        return obj;
+    }
+
+    const playerOneName = obj.playerOneInput;
+    const playerTwoName = obj.playerTwoInput;
 
     gameDiv.forEach((div) => div.addEventListener('click', (e) => playerChoice(e, div)));
 
@@ -201,7 +279,7 @@ let displayController = (function(obj) {
         id = parseInt(e.target.id);
         indexId = freeDivs.indexOf(id);
 
-        let playerOne = () => {
+        let dispPlayerOne = () => {
         //If div has bot previously been clicked
             if(freeDivs.includes(id)) {
                 //id of each div clicked is removed and placed into array. 
@@ -209,6 +287,7 @@ let displayController = (function(obj) {
                 
                 //display x in div
                 const p = document.createElement('p');
+                p.setAttribute('class', 'para');
                 playerOne = document.createTextNode('X');
 
                 div.appendChild(p);
@@ -226,6 +305,7 @@ let displayController = (function(obj) {
                 playerTwoPattern += freeDivs.splice(indexId, 1);
 
                 const p = document.createElement('p');
+                p.setAttribute('class', 'para');
                 playerTwo = document.createTextNode('O');
 
                 div.appendChild(p);
@@ -237,10 +317,12 @@ let displayController = (function(obj) {
         }
         //toggles playerOne and playerTwo 
         (function togglePlayers () {
-            toggle ? playerTwoComp() : playerOne();
+            toggle ? playerTwoComp() : dispPlayerOne();
         })();
         
         let objControl = {
+            playerOneName,
+            playerTwoName,
             playerOnePattern,
             playerTwoPattern,
             toggle,
@@ -251,11 +333,11 @@ let displayController = (function(obj) {
         let scoreDisplayControl = gameController(objControl); 
         scoreDisplayControl.scoreDisplayToInfo();
 
+        return {objControl};
+
     }
 
     const displayName = () => {
-        const playerOneName = obj.playerOneInput;
-        const playerTwoName = obj.playerTwoInput;
         let namesDisplay; 
 
         const p = document.createElement('p');
@@ -272,25 +354,43 @@ let displayController = (function(obj) {
     }
 
     const displayWinner = () => {
+
         let winner;
-        
-        if(toggle === true) {
-            winner = obj.playerOneInput;
+
+        if(obj.toggle === true) {
+            winner = obj.playerOneName;
         }
-        else if (toggle === false) {
-            winner = obj.playerTwoInput;
+        else if (obj.toggle === false) {
+            winner = obj.playerTwoName;
         }
 
         const p = document.createElement('p');
-        const winnerDisplay = document.createTextNode(`${winner} wins!`);
+        const winnerDisplay = document.createTextNode(`${winner} WINS!`);
 
         winDisplay.appendChild(p);
         p.appendChild(winnerDisplay);
     }
 
+    const restart = () => {
+
+        gameDiv.forEach(div => {
+            let element = document.getElementsByClassName("para");
+            element.remove;
+        })
+        let object = playerChoice();
+        
+        object.playerOneName = '';
+        object.playerTwoName = '';
+        object.playerOnePattern = [];
+        object.playerTwoPattern = [];
+        object.toggle = false;
+
+    }
+
     return {
         displayName,
-        displayWinner
+        displayWinner,
+        restart
     }
 
 });

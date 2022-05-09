@@ -33,15 +33,24 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     height: 90vh;
-    width: 95vw;
+    width: 80vw;
     z-index: 0;
 }
 /* player score div */
 .player-score {
     display: flex;
-    justify-content: space-between;
-    width: 50%;
+    flex-direction: column;
+    align-items: center;
     font-size: 1.3rem;
+    margin-bottom: 25px;
+}
+.scores, .win-display {
+    padding: 0px;
+    height: 30px;
+}
+.display-name > p {
+    height: 25px;
+    margin: 10px;
 }
 /* game board section */
 .main {
@@ -49,17 +58,18 @@ body {
     flex-direction: column;
     align-items: center;
     height: 77vh;
-    width: 80vw;
+    flex: 0 1 1050px;
 }
 /* Game board */
 .gameBoard {
     height: 45vh;
-    width: 25vw;
-    margin-top: 12vh;
+    width: 20vw;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
+    justify-content: center;
     gap: var(--margin);
+    margin-top: 15px;
 }
 .gameDiv {
     background-color: var(--background-color);
@@ -70,8 +80,10 @@ body {
     align-items: center;
     justify-content: center;
 
-    font-size: 4rem;
+    font-size: 3rem;
     font-weight: 900;
+    min-width: 75px;
+    min-height: 55px;
 }
 .gameDiv > p {
     margin: 0;
@@ -122,11 +134,24 @@ button {
     border: none;
     color: var(--text-color);
     font-weight: 900;
+    min-width: 70px;
 }
 .diffButtons {
     display: flex;
     justify-content: space-around;
     width: 100%;
+}
+button:hover {
+    box-shadow: var(--box-shadow-hover);
+}
+.restart {
+    height: 6vh;
+    width: 8vw;
+    font-size: 1rem;
+    font-weight: 900;
+    background-color: rgb(241, 111, 161);
+    color: rgb(54, 151, 243);
+    border-radius: 5px;
 }
 /* if player selects to play vs computer */
 .active {
@@ -171,6 +196,7 @@ input:focus {
 .display-name {
     font-size: 1.5rem;
     font-weight: 900;
+    margin: 0px;
 }
 footer {
     position: fixed;
