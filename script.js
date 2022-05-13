@@ -15,22 +15,24 @@ compOption.addEventListener('click', () => toggleComp());
 restart.addEventListener('click', () => gameController().sendRestart());
 
 easy.addEventListener('click', (e) => difficulty(e));
-med = addEventListener('click', (e) => difficulty(e));
+med.addEventListener('click', (e) => difficulty(e));
 impossible.addEventListener('click', (e) => difficulty(e));
 
 let difficulty = (e) => {
         if(e.target.id === 'easy') {
-            let easy = playerFactory();
-            easy.easy();
+            console.log('easy')
+            // let easy = playerFactory();
+            // easy.easy();
         }
-        else if(e.target.id === 'medium') {
-            let medium = playerFactory();
-            medium.med();
+        else if(e.target.id === 'med') {
+            console.log('med')
+            // let medium = playerFactory();
+            // medium.med();
         }
         else if(e.target.id === 'imp') {
             console.log('imp');
-            let imp = playerFactory();
-            imp.imp()
+            // let imp = playerFactory();
+            // imp.imp()
         }
 }
 
@@ -230,8 +232,9 @@ const gameController = ((obj) => {
     const sendRestart = () => {
         console.log("I work!");
         let reset = displayController();
-        console.log(typeof displayController().restart()); //Says restart() is not a function.
+        reset.restartProgram(); //Says restart() is not a function.
     }
+
 
     return {
         displayName,
@@ -239,31 +242,33 @@ const gameController = ((obj) => {
         scoreDisplayToInfo,
         obj,
         sendNumToP2,
-        sendRestart
+        sendRestart,
     }
-    
+
 
 });
 
-let displayController = (function(obj) {
+let displayController = ((obj) => {
     const winDisplay = document.querySelector('.win-display');
     const nameDisplay = document.querySelector('.display-name');
     const gameDiv = document.querySelectorAll('.gameDiv');
 
-    if(obj === undefined) {
-        let obj = {
-            playerOneInput: '',
-            playerTwoInput: ''
-        }
-        return obj;
-    }
+    let playerOneName = '';
+    let playerTwoName = '';
+    let freeDivs = [];
+    let objControl = {};
 
-    const playerOneName = obj.playerOneInput;
-    const playerTwoName = obj.playerTwoInput;
+    if(obj) {
+
+        playerOneName = obj.playerOneInput;
+        playerTwoName = obj.playerTwoInput;
+    }        
 
     gameDiv.forEach((div) => div.addEventListener('click', (e) => playerChoice(e, div)));
-
-    let freeDivs = gameBoard.divArray; //available selection of divs
+        
+    //available selection of divs
+    freeDivs = gameBoard.divArray; 
+    console.log(typeof gameBoard);
     let id;
 
     //bool: if false, select playerOne(); if true, select playerTwo()
@@ -276,8 +281,10 @@ let displayController = (function(obj) {
     let playerChoice = (e, div) => {
 
     //get e.target.id, and remove from array to prevent div from further usage.
-        id = parseInt(e.target.id);
-        indexId = freeDivs.indexOf(id);
+        if(freeDivs.includes(parseInt(e.target.id))) {;
+            id = parseInt(e.target.id);
+            indexId = freeDivs.indexOf(id);
+        }    
 
         let dispPlayerOne = () => {
         //If div has bot previously been clicked
@@ -296,6 +303,7 @@ let displayController = (function(obj) {
                 //next selection will trigger playerTwoComp
                 toggle = true;
             }
+
         }
 
         let playerTwoComp = () => {
@@ -320,7 +328,7 @@ let displayController = (function(obj) {
             toggle ? playerTwoComp() : dispPlayerOne();
         })();
         
-        let objControl = {
+        objControl = {
             playerOneName,
             playerTwoName,
             playerOnePattern,
@@ -329,11 +337,9 @@ let displayController = (function(obj) {
             freeDivs
         }
 
-        //send objControl to gameController, which sends to playerFactory.score
+        // send objControl to gameController, which sends to playerFactory.score
         let scoreDisplayControl = gameController(objControl); 
         scoreDisplayControl.scoreDisplayToInfo();
-
-        return {objControl};
 
     }
 
@@ -371,26 +377,34 @@ let displayController = (function(obj) {
         p.appendChild(winnerDisplay);
     }
 
-    const restart = () => {
+    const restartProgram = () => {
 
         gameDiv.forEach(div => {
             let element = document.getElementsByClassName("para");
-            element.remove;
+            if(element.length > 0) {
+                element[0].remove();
+            }
         })
-        let object = playerChoice();
-        
-        object.playerOneName = '';
-        object.playerTwoName = '';
-        object.playerOnePattern = [];
-        object.playerTwoPattern = [];
-        object.toggle = false;
 
+        freeDivs = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        
+        // let obj = playerChoice().objControl;
+
+        obj.playerOneName = '';
+        obj.playerTwoName = '';
+        toggle = false;
+        obj.playerOnePattern = [];
+        obj.playerTwoPattern = [];
+
+        objControl = obj;
+
+        return freeDivs;
     }
 
     return {
         displayName,
         displayWinner,
-        restart
+        restartProgram,
     }
 
 });
@@ -417,6 +431,5 @@ const gameBoard = (() => {
         divArray
 
     }
-
 
 })();
