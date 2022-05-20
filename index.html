@@ -1,51 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./style.css">
-    <script src="./script.js" defer></script>
-    <title>Tic-Tac-Toe</title>
-</head>
-<body>
-<div class="container">
-    <div class="main">
-    <button class="restart">RESTART</button>
-    <div class="display-name"></div>
-    <div class="player-score">
-        <div class="win-display"></div>
-    </div>
-        <div class="gameBoard">
-        </div>
-    </div>
-<div class="modal">
-    <div class="modal-background">
-        <div class="form-div">
-            <form action="">
-                <div class="playerOneDiv">
-                    <input type="text" id="playerOneInput" placeholder="Name" required>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="./style.css" />
+        <script src="./script2.js" defer></script>
+        <title>Tic-Tac-Toe</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="main">
+                <button class="restart">RESTART</button>
+                <div class="display-name"></div>
+                <div class="gameBoard"></div>
+            </div>
+            <div class="modal">
+                <div class="modal-background">
+                    <div class="form-div">
+                        <form action="">
+                            <div class="playerOneDiv">
+                                <input
+                                    type="text"
+                                    id="playerOneInput"
+                                    placeholder="Name"
+                                    required
+                                />
+                            </div>
+                            <div class="playerTwoDiv">
+                                <input
+                                    type="text"
+                                    id="playerTwoInput"
+                                    placeholder="Player Two (optional)"
+                                />
+                            </div>
+                        </form>
+                    </div>
+                    <p><em>- OR -</em></p>
+                    <button class="compOption">Computer</button>
+                    <button class="submit">Submit</button>
                 </div>
-        
-                <div class="playerTwoDiv">
-                    <input type="text" id="playerTwoInput" placeholder="Player Two (optional)">
-                </div>
-            </form>
+            </div>
+            <div class="display-winner invis">
+                <button class="restart">New Game</button>
+            </div>
         </div>
-        <p><em>- OR -</em></p>
-        <button class="compOption">Computer</button>
-        <p class="diffLevel"><em>- Difficulty Level -</em></p>
-        <div class="diffButtons">
-            <button class="levels" id = "easy">Easy</button>
-            <button class="levels" id = "med">Medium</button>
-            <button class="levels" id="imp">Impossible</button>
-        </div>
-        <button class="submit">Submit</button>
-    </div>
-</div>
-</div>
-    <footer>
-        <div class="gitLink">By: itsaflamingo</div>
-    </footer>
-</body>
+        <footer>
+            <div class="gitLink">By: itsaflamingo</div>
+        </footer>
+    </body>
 </html>

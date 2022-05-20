@@ -36,18 +36,6 @@ body {
     width: 80vw;
     z-index: 0;
 }
-/* player score div */
-.player-score {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-size: 1.3rem;
-    margin-bottom: 25px;
-}
-.scores, .win-display {
-    padding: 0px;
-    height: 30px;
-}
 .display-name > p {
     height: 25px;
     margin: 10px;
@@ -96,7 +84,7 @@ body {
     background-image: linear-gradient(90deg, #43cea2 ,#185a9d);
     border-radius: var(--border-radius);
 
-    width: 45%;
+    width: 35%;
     height: 70%;
 
     position: fixed;
@@ -126,6 +114,27 @@ form{
     display: flex;
     flex-direction: column;
 }
+.display-winner {
+    background-image: linear-gradient(90deg, #43cea2 ,#185a9d);
+    height: 30%;
+    width: 35%;
+    border-radius: var(--border-radius);
+
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: 200ms ease-in-out;
+    z-index: 10;
+
+    font-size: 1.7rem;
+    font-weight: 900;
+}
 button {
     width: 7vw;
     height: 5.5vh;
@@ -135,11 +144,6 @@ button {
     color: var(--text-color);
     font-weight: 900;
     min-width: 70px;
-}
-.diffButtons {
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
 }
 button:hover {
     box-shadow: var(--box-shadow-hover);
